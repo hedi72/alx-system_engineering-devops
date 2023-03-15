@@ -1,8 +1,0 @@
-#!/bin/bash
-An alias is a custom command that you create in a Unix or Unix-like operating system, such as Linux or macOS. An alias is essentially a shorthand way of calling a longer or more complex command by a shorter or simpler name.
-
-You can create an alias by using the alias command, followed by the name you want to give to the alias, an equals sign, and the longer command or commands that the alias should represent. For example, the following command creates an alias called ll that represents the ls -l command:
-
-bash
-Copy code
-alias ll='ls -l'
