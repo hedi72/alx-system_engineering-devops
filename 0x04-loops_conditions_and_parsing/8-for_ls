@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# This script displays directory contents in list format with names after the first dash.
+
+# Use a for loop to iterate over files and directories (excluding hidden ones)
+for item in *
+do
+    # Check if it's a file or directory (excluding hidden items)
+    if [ -e "$item" ] && [ ! -d "$item" ] && [ "${item:0:1}" != "." ]
+    then
+        # Extract the part of the name after the first dash
+        name_after_dash="${item#*-}"
+        echo "$name_after_dash"
+    fi
+done
