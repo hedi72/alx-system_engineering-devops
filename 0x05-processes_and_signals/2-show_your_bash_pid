@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# This script displays the PID of your Bash process.
+
+# Display lines containing the word "bash"
+ps -auxf | grep bash
+
+# Use awk to extract the relevant line and PID
+bash_line=$(ps -auxf | grep bash | grep -v grep | grep -v "$0")
+bash_pid=$(echo "$bash_line" | awk '{print $2}')
+
+echo "Your Bash PID is: $bash_pid"
