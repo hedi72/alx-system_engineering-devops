@@ -1,7 +1,4 @@
-# File: execute_a_command.pp
-
+# kills a process named killmenow
 exec { 'killmenow':
-  command     => 'pkill -f killmenow',
-  path        => '/usr/bin:/bin', # Specify the path to the pkill command
-  refreshonly => true,
+  command   => '/usr/bin/pkill -TERM killmenow',
 }
