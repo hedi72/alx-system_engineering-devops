@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 # fixed bug port 80
+
 ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 sudo service nginx restart
