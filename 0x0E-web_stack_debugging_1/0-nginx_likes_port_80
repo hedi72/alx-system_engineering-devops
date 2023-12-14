@@ -4,6 +4,6 @@
 # remove the default nginx confi file
 rm /etc/nginx/sites-enabled/default
 # configure nginx to listen on port 80
-ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sed -i 's/listen\s+80;/listen 80 default_server;/' /etc/nginx/sites-enabled/default
 # restart nginx
 sudo service nginx restart
