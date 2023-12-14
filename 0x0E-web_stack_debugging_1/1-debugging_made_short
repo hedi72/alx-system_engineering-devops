@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# im comment
-# ggg
-# gg
-sudo python3 -m http.server --directory /usr/share/nginx/html 80 > /dev/null 2>&1 &
+# commands to debug the container
+sudo sed -i 's/8080/80/' /etc/nginx/sites-enabled/default
+sudo service nginx start
+rm /var/run/nginx.pid
