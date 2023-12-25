@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
-#Configure domain name
+# a Bash script that will display information about subdomains
+# shellcheck disable=SC2086
+info () {
+if [ $# -eq 2 ]
+then
+    sub="$2"
+    dig $2.$1 | grep -A1 'ANSWER SECTION:' | tail -1 | awk '{print "The subdomain '$sub' is a "$4" record and points to "$NF""}'
 
-if [ "$#" -eq 1 ]; then
-    echo "$(dig www.$1 | awk '/ANSWER SECTION:/ {getline; print "The subdomain www is a "$4" record and points to "$5}')"
-    echo "$(dig lb-01.$1 | awk '/ANSWER SECTION:/ {getline; print "The subdomain lb-01 is a "$4" record and points to "$5}')"
-    echo "$(dig web-01.$1 | awk '/ANSWER SECTION:/ {getline; print "The subdomain web-01 is a "$4" record and points to "$5}')"
-    echo "$(dig web-02.$1 | awk '/ANSWER SECTION:/ {getline; print "The subdomain web-02 is a "$4" record and points to "$5}')"
-elif [ "$#" -eq 2 ]; then
-    subdomain=$2
-    echo "$(dig $subdomain.$1 | awk '/ANSWER SECTION:/ {getline; print "The subdomain '"$subdomain"' is a "$4" record and points to "$5}')"
+elif [ $# -eq 1 ]
+then
+    subs=('www' 'lb-01' 'web-01' 'web-02')
+    for each in "${subs[@]}"
+    do
+        dig $each.$1 | grep -A1 'ANSWER SECTION:' | tail -1 | awk '{print "The subdomain '$each' is a "$4" record and points to "$NF""}'
+    done
 fi
+}
+
+info $1 $2
