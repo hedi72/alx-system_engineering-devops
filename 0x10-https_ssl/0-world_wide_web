@@ -1,34 +1,18 @@
 #!/bin/bash
 
-# Function to display information about a subdomain
-display_info() {
-    domain=$1
-    subdomain=$2
+function get_subdomain_info() {
+  domain=$1
+  subdomain=$2
 
-    if [ -z "$subdomain" ]; then
-        subdomains=("www" "lb-01" "web-01" "web-02")
-    else
-        subdomains=("$subdomain")
-    fi
-
-    for sub in "${subdomains[@]}"; do
-        result=$(dig $sub.$domain | grep -A1 'ANSWER SECTION:')
-        record_type=$(echo "$result" | awk '/IN/ {print $4}')
-        destination=$(echo "$result" | awk '/IN/ {print $5}')
-
-        echo "The subdomain $sub is a $record_type record and points to $destination"
-    done
+  dig +short "$subdomain.$domain" | awk '/ANSWER SECTION:/ { getline; print $0 }'
 }
 
-# Check for correct number of arguments
-if [ "$#" -lt 1 ]; then
-    echo "Usage: $0 <domain> [subdomain]"
-    exit 1
+if [[ $# -eq 1 ]]; then
+  for subdomain in www lb-01 web-01 web-02; do
+    info=$(get_subdomain_info "$1" "$subdomain")
+    echo "The subdomain $subdomain is a ${info%% *} record and points to ${info##* }"
+  done
+else
+  info=$(get_subdomain_info "$1" "$2")
+  echo "The subdomain $2 is a ${info%% *} record and points to ${info##* }"
 fi
-
-# Assign arguments to variables
-domain=$1
-subdomain=$2
-
-# Display information about subdomains
-display_info "$domain" "$subdomain"
