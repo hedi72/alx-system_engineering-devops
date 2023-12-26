@@ -1,26 +1,38 @@
 #!/usr/bin/env bash
-# Script that will display information about subdomains.
+
+# Function to display information about subdomains.
 function domain_check {
-	domain_names=("www" "lb-01" "web-01" "web-02")
+    domain_names=("www" "lb-01" "web-01" "web-02")
 
-	for i in "${domain_names[@]}";
-	do
-		dig "${i}"."$1" | grep -A1 'ANSWER SECTION:' | \
-		awk 'FNR == 2 {printf "The subdomain %s is a %s record and points to %s\n", var, $4, $5}' var="$i"
-	done
+    for subdomain in "${domain_names[@]}"; do
+        query_result=$(dig "${subdomain}"."$1" | grep -A1 'ANSWER SECTION:')
+        record_type=$(awk 'FNR == 2 {print $4}' <<< "$query_result")
+        destination=$(awk 'FNR == 2 {print $5}' <<< "$query_result")
+
+        printf "The subdomain %s is a %s record and points to %s\n" "$subdomain" "$record_type" "$destination"
+    done
 }
 
+# Function to display information about a specific subdomain.
 function subdomain_check {
-	dig "${2}"."$1" | grep -A1 'ANSWER SECTION:' | \
-	awk 'FNR == 2 {printf "The subdomain %s is a %s record and points to %s\n", var, $4, $5}' var="$2"
+    query_result=$(dig "${2}"."$1" | grep -A1 'ANSWER SECTION:')
+    record_type=$(awk 'FNR == 2 {print $4}' <<< "$query_result")
+    destination=$(awk 'FNR == 2 {print $5}' <<< "$query_result")
+
+    printf "The subdomain %s is a %s record and points to %s\n" "$2" "$record_type" "$destination"
 }
 
-if [ $# -lt 1 ]
-then
-	echo "*** Provide domain name ***"
-elif [ $# -eq 1 ]
-then
-	domain_check "$1";
+# Check for the availability of the 'dig' command
+if ! command -v dig &> /dev/null; then
+    echo "Error: 'dig' command not found. Please install dig before running this script."
+    exit 1
+fi
+
+# Main script logic
+if [ $# -lt 1 ]; then
+    echo "*** Provide domain name ***"
+elif [ $# -eq 1 ]; then
+    domain_check "$1"
 else
-	subdomain_check "$1" "$2";
+    subdomain_check "$1" "$2"
 fi
