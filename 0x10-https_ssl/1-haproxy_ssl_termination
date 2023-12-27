@@ -1,6 +1,6 @@
 frontend haproxy-config
         bind *:80
-        bind *:443 ssl crt /etc/haproxy/certs/www.soltogrow.tech.pem
+        bind *:443 ssl crt /etc/letsencrypt/live/www.soltogrow.tech/fullchain.pem
         redirect scheme https code 301 if !{ ssl_fc }
         default_backend backend-config
 backend backend-config
