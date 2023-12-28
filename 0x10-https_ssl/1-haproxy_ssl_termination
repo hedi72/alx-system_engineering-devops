@@ -35,19 +35,10 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-#listen myserver
-#       bind *:80
-#       balance roundrobin
-#       server web-01 54.167.146.86:80 check
-#       server web-02 54.157.189.37:80 check
-
-frontend corp
+listen myserver
         bind *:80
         bind *:443 ssl crt /etc/haproxy/certs/www.soltogrow.tech.pem
         redirect scheme https code 301 if !{ ssl_fc }
-        default_backend myservers
-
-backend myservers
         balance roundrobin
         server web-01 54.167.146.86:80 check
         server web-02 54.157.189.37:80 check
