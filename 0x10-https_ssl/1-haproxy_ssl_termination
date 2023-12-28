@@ -1,9 +1,10 @@
-frontend haproxy-config
+frontend corp
         bind *:80
-        bind *:443 ssl crt /etc/letsencrypt/live/www.soltogrow.tech/fullchain.pem
+        bind *:443 ssl crt /etc/haproxy/certs/www.soltogrow.tech.pem
         redirect scheme https code 301 if !{ ssl_fc }
-        default_backend backend-config
-backend backend-config
+        default_backend myservers
+
+backend myservers
         balance roundrobin
-        server 374274-web-01 54.167.146.86:80 check
-        server 374274-web-02 54.157.189.37:80 check
+        server web-01 54.167.146.86:80 check
+        server web-02 54.157.189.37:80 check
